@@ -3,6 +3,9 @@ from kokoro_onnx import Kokoro
 import re
 import os
 import subprocess
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class KokoroTTSService:
     def __init__(self, model_path="kokoro-v1.0.onnx", voices_path="voices-v1.0.bin"):

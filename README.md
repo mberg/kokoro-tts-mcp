@@ -29,9 +29,10 @@ Add the following to your MCP configs.
         "AWS_REGION": "us-east-1",
         "AWS_S3_FOLDER": "mp3",
         "S3_ENABLED": "true",
-        "MP3_FOLDER": "/Users/mberg/Documents/mp3"
+        "MP3_FOLDER": "/path/to/mp3"
       } 
     }
+
 
 
 
