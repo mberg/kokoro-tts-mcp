@@ -1,0 +1,15 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+mp3/
+kokoro-v1.0.onnx
+voices-v1.0.bin
+frontend/node_modules/
+# Virtual environments
+.venv
+settings.py
+.env

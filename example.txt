@@ -1,0 +1,1 @@
+This is an example text file for testing the Kokoro TTS service. The text-to-speech system will convert this text into spoken audio.
