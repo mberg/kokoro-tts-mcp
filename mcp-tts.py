@@ -4,7 +4,6 @@ import time
 import json
 import asyncio
 from werkzeug.utils import secure_filename
-import settings
 import boto3
 from botocore.exceptions import ClientError
 import argparse
