@@ -12,6 +12,25 @@ from dotenv import load_dotenv
 import datetime
 import shutil
 
+# Load environment variables from .env file
+load_dotenv()
+
+# Create default settings object to replace settings.py
+class Settings:
+    def __init__(self):
+        self.S3_SETTINGS = {
+            "enabled": False,  # Default to disabled
+            "bucket_name": None,
+            "region": None,
+            "folder": "mp3",
+            "access_key_id": None,
+            "secret_access_key": None,
+            "endpoint_url": None
+        }
+
+# Initialize settings object
+settings = Settings()
+
 # Function to check if running on Claude Desktop and load config
 def load_claude_desktop_config():
     """
@@ -148,49 +167,39 @@ class MCPTTSServer:
                 print("S3 uploads are disabled via S3_ENABLED environment variable")
                 return
                 
-            # If S3_ENABLED is true in env, or not specified but enabled in settings, proceed
-            if not (s3_enabled_env in ('true', '1', 'yes') or 
-                    (not s3_enabled_env and settings.S3_SETTINGS.get('enabled', False))):
-                print("S3 uploads are disabled in settings")
+            # If S3_ENABLED is not explicitly set to true, disable S3
+            if not (s3_enabled_env in ('true', '1', 'yes')):
+                print("S3 uploads are disabled (S3_ENABLED not set to true)")
                 return
             
             print("Validating S3 settings...")
-            # Get bucket name from environment or settings
-            bucket_name = os.environ.get('AWS_S3_BUCKET_NAME') or settings.S3_SETTINGS.get('bucket_name')
-            # Get region from environment or settings
-            region = os.environ.get('AWS_S3_REGION') or settings.S3_SETTINGS.get('region')
-            # Get folder from environment or settings
-            folder = os.environ.get('AWS_S3_FOLDER') or settings.S3_SETTINGS.get('folder', 'mp3')
-            # Get endpoint URL from environment or settings
-            endpoint_url = os.environ.get('AWS_S3_ENDPOINT_URL') or settings.S3_SETTINGS.get('endpoint_url')
+            # Get settings from environment variables
+            bucket_name = os.environ.get('AWS_S3_BUCKET_NAME')
+            region = os.environ.get('AWS_S3_REGION')
+            folder = os.environ.get('AWS_S3_FOLDER', 'mp3')
+            endpoint_url = os.environ.get('AWS_S3_ENDPOINT_URL')
             
             if not bucket_name:
-                print("ERROR: S3 bucket name is not configured")
+                print("ERROR: S3 bucket name is not configured (AWS_S3_BUCKET_NAME)")
                 return
                 
             if not region:
-                print("ERROR: S3 region is not configured")
+                print("ERROR: S3 region is not configured (AWS_S3_REGION)")
                 return
             
             try:
-                # Look for credentials in environment variables first (.env file takes precedence)
+                # Get AWS credentials from environment variables
                 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
                 if not aws_access_key_id:
-                    print("AWS_ACCESS_KEY_ID not found in environment (.env), using settings file")
-                    aws_access_key_id = settings.S3_SETTINGS.get('access_key_id')
-                    if not aws_access_key_id:
-                        print("ERROR: AWS access key ID not found in settings")
-                        return
+                    print("ERROR: AWS_ACCESS_KEY_ID not found in environment (.env)")
+                    return
                 else:
                     print("Using AWS access key from environment variables (.env)")
                 
                 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
                 if not aws_secret_access_key:
-                    print("AWS_SECRET_ACCESS_KEY not found in environment (.env), using settings file")
-                    aws_secret_access_key = settings.S3_SETTINGS.get('secret_access_key')
-                    if not aws_secret_access_key:
-                        print("ERROR: AWS secret access key not found in settings")
-                        return
+                    print("ERROR: AWS_SECRET_ACCESS_KEY not found in environment (.env)")
+                    return
                 else:
                     print("Using AWS secret key from environment variables (.env)")
                 
@@ -241,10 +250,9 @@ class MCPTTSServer:
         if object_name is None:
             object_name = os.path.basename(file_path)
         
-        # Get bucket name from environment or settings
-        bucket_name = os.environ.get('AWS_S3_BUCKET_NAME') or settings.S3_SETTINGS.get('bucket_name')
-        # Get folder from environment or settings
-        folder = os.environ.get('AWS_S3_FOLDER') or settings.S3_SETTINGS.get('folder', 'mp3')
+        # Get settings from environment variables
+        bucket_name = os.environ.get('AWS_S3_BUCKET_NAME')
+        folder = os.environ.get('AWS_S3_FOLDER', 'mp3')
         
         if folder and not folder.endswith('/'):
             folder += '/'
@@ -257,10 +265,9 @@ class MCPTTSServer:
             self.s3_client.upload_file(file_path, bucket_name, s3_path)
             print("✅ File successfully uploaded to S3")
             
-            # Get endpoint URL from environment or settings
-            endpoint = os.environ.get('AWS_S3_ENDPOINT_URL') or settings.S3_SETTINGS.get('endpoint_url')
-            # Get region from environment or settings
-            region = os.environ.get('AWS_S3_REGION') or settings.S3_SETTINGS.get('region')
+            # Get endpoint URL and region from environment variables
+            endpoint = os.environ.get('AWS_S3_ENDPOINT_URL')
+            region = os.environ.get('AWS_S3_REGION')
             
             if endpoint:
                 s3_url = f"{endpoint}/{bucket_name}/{s3_path}"
@@ -435,10 +442,10 @@ def main():
     
     # Check for DISABLE_S3 environment variable
     if os.environ.get('DISABLE_S3') == 'true' or os.environ.get('DISABLE_S3') == '1':
-        settings.S3_SETTINGS['enabled'] = False
+        os.environ['S3_ENABLED'] = 'false'
         print("S3 uploads disabled by environment variable")
     elif args.disable_s3:
-        settings.S3_SETTINGS['enabled'] = False
+        os.environ['S3_ENABLED'] = 'false'
         print("S3 uploads disabled by command line argument")
     
     # Command line args override environment variables
