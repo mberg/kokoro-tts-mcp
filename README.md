@@ -40,7 +40,9 @@ This is needed to convert .wav to .mp3 files
 
 For mac:
 
+``` 
 brew install ffmpeg
+```
 
 
 ### Supported Environment Variables
