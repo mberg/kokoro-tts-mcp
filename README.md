@@ -65,21 +65,11 @@ brew install ffmpeg
 
 ## Running the Server Locally
 
+Preferred method use UV 
+```
 uv run mcp-tts.py
-
-```bash
-python mcp-tts.py
 ```
 
-```bash
-python mcp-tts.py
-```
-
-For additional command-line options:
-
-```bash
-python mcp-tts.py --help
-```
 
 ## Using the TTS Client
 
