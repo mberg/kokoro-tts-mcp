@@ -11,7 +11,7 @@ Uses: https://huggingface.co/spaces/hexgrad/Kokoro-TTS
 
 Add the following to your MCP configs.
 
-
+```
   "kokoro-tts-mcp": {
       "command": "uv",
       "args": [
@@ -32,9 +32,15 @@ Add the following to your MCP configs.
         "MP3_FOLDER": "/path/to/mp3"
       } 
     }
+```
 
+### Install ffmmeg
 
+This is needed to convert .wav to .mp3 files
 
+For mac:
+
+brew install ffmpeg
 
 
 ### Supported Environment Variables

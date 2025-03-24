@@ -333,9 +333,19 @@ class MCPTTSServer:
                 )
                 
                 if isinstance(result, dict) and not result.get('success', True):
+                    print(f"TTS service returned an error: {result}")  # Log the result for debugging
                     return {
                         "success": False,
-                        "error": result.get('error', 'Unknown TTS generation error')
+                        "error": result.get('error', 'Unknown TTS generation error'),
+                        "tts_result": result,  # Include full TTS service response
+                        "request_params": {
+                            "text": text,
+                            "voice": voice,
+                            "speed": speed,
+                            "lang": lang,
+                            "filename": filename
+                        },
+                        "timestamp": datetime.datetime.now().isoformat()
                     }
                     
             except TypeError as e:
