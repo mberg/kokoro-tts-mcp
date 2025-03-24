@@ -44,6 +44,7 @@ For mac:
 brew install ffmpeg
 ```
 
+To run locally add these to your .env file.  See env.example and copy to .env and modify with your own values.
 
 ### Supported Environment Variables
 
