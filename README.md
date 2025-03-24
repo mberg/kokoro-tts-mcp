@@ -7,9 +7,9 @@ Uses: https://huggingface.co/spaces/hexgrad/Kokoro-TTS
 ## Configuration
 
 * Clone to a local repo.
-* Download the [Kokoro Onnx Weights](https://github.com/thewh1teagle/kokoro-onnx) for [kokoro-v1.0.onnx](https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx) and [voices-v1.0.bin](https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin) and store the same repo.
+* Download the [Kokoro Onnx Weights](https://github.com/thewh1teagle/kokoro-onnx) for [kokoro-v1.0.onnx](https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx) and [voices-v1.0.bin](https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin) and store in the same repo.
 
-Add the following to your MCP configs.
+Add the following to your MCP configs. Update with your own values.
 
 ```
   "kokoro-tts-mcp": {
