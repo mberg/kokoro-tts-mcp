@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/mberg-kokoro-tts-mcp-badge.png)](https://mseep.ai/app/mberg-kokoro-tts-mcp)
+
 ## Kokoro Text to Speech (TTS) MCP Server
 
 Kokoro Text to Speech MCP server that generates .mp3 files with option to upload to S3.
