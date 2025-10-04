@@ -2,6 +2,8 @@
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@mberg/kokoro-tts-mcp/badge" alt="Kokoro Text to Speech Server MCP server" />
 </a>
 
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/mberg/kokoro-tts-mcp)](https://archestra.ai/mcp-catalog/mberg__kokoro-tts-mcp)
+
 ## Kokoro Text to Speech (TTS) MCP Server
 
 Kokoro Text to Speech MCP server that generates .mp3 files with option to upload to S3.
