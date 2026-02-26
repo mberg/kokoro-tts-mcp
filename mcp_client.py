@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-async def send_tts_request(host, port, text, voice, speed, language, filename, upload_to_s3=True):
+async def send_tts_request(host, port, text, provider, voice, speed, language, preset, filename, play_audio=False, stream_playback=False, upload_to_s3=True):
     """Send a TTS request to the MCP server"""
     try:
         # Connect to the server
@@ -20,9 +20,13 @@ async def send_tts_request(host, port, text, voice, speed, language, filename, u
         # Create the request
         request = {
             "text": text,
+            "provider": provider,
             "voice": voice,
             "speed": speed,
             "lang": language,
+            "preset": preset,
+            "play_audio": play_audio,
+            "stream_playback": stream_playback,
             "upload_to_s3": upload_to_s3
         }
         
@@ -110,12 +114,20 @@ def main():
                        help="Text file to read content from")
     parser.add_argument("--voice", default=os.environ.get("TTS_VOICE", "af_heart"),
                        help="Voice to use (default: af_heart or TTS_VOICE env var)")
+    parser.add_argument("--provider", default=os.environ.get("TTS_PROVIDER", "auto"),
+                       help="TTS provider: auto, edge, kokoro")
     parser.add_argument("--speed", type=float, default=float(os.environ.get("TTS_SPEED", "1.0")),
                        help="Speech speed (default: 1.0 or TTS_SPEED env var)")
-    parser.add_argument("--language", default=os.environ.get("TTS_LANGUAGE", "en-us"),
-                       help="Language code (default: en-us or TTS_LANGUAGE env var)")
+    parser.add_argument("--language", default=os.environ.get("TTS_LANGUAGE", "auto"),
+                       help="Language code (default: auto or TTS_LANGUAGE env var)")
+    parser.add_argument("--preset", default=None,
+                       help="Optional preset (ru_warm, ru_neutral, ru_bright, en_neutral)")
     parser.add_argument("--filename", default=None,
                        help="Output filename (default: auto-generated)")
+    parser.add_argument("--play-audio", action="store_true",
+                       help="Play speech on default output device after generation")
+    parser.add_argument("--stream-playback", action="store_true",
+                       help="For edge provider: stream audio while generating")
     
     # S3 options
     parser.add_argument("--no-s3", action="store_true",
@@ -142,10 +154,14 @@ def main():
         host=args.host,
         port=args.port,
         text=text,
+        provider=args.provider,
         voice=args.voice,
         speed=args.speed,
         language=args.language,
+        preset=args.preset,
         filename=args.filename,
+        play_audio=args.play_audio,
+        stream_playback=args.stream_playback,
         upload_to_s3=not args.no_s3
     ))
     
