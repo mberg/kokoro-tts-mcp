@@ -25,9 +25,12 @@ Add the following to your MCP configs. Update with your own values.
         "mcp-tts.py"
       ],
       "env": {
+        "TTS_PROVIDER": "auto",
         "TTS_VOICE": "af_heart",
+        "TTS_EDGE_VOICE": "en-US-AvaNeural",
+        "TTS_RU_VOICE": "ru-RU-SvetlanaNeural",
         "TTS_SPEED": "1.0",
-        "TTS_LANGUAGE": "en-us",
+        "TTS_LANGUAGE": "auto",
         "AWS_ACCESS_KEY_ID": "",
         "AWS_SECRET_ACCESS_KEY": "",
         "AWS_REGION": "us-east-1",
@@ -67,8 +70,11 @@ To run locally add these to your .env file.  See env.example and copy to .env an
 - `MP3_RETENTION_DAYS`: Number of days to keep MP3 files before automatic deletion
 - `DELETE_LOCAL_AFTER_S3_UPLOAD`: Whether to delete local MP3 files after successful S3 upload (set to "true" or "1")
 - `TTS_VOICE`: Default voice for the TTS client (default: af_heart)
+- `TTS_PROVIDER`: Preferred provider (`auto`, `edge`, `kokoro`). Default: `auto`
+- `TTS_EDGE_VOICE`: Default edge-tts voice for non-Russian text
+- `TTS_RU_VOICE`: Default edge-tts Russian voice
 - `TTS_SPEED`: Default speed for the TTS client (default: 1.0)
-- `TTS_LANGUAGE`: Default language for the TTS client (default: en-us)
+- `TTS_LANGUAGE`: Default language for the TTS client (default: auto)
 
 ## Running the Server Locally
 
@@ -105,6 +111,35 @@ python mcp_client.py --file my_text.txt
 
 ```bash
 python mcp_client.py --text "Hello, world!" --voice "en_female" --speed 1.2
+```
+
+### Russian and Presets
+
+The server now supports:
+
+- `provider=auto` (default): routes Russian text to `edge-tts` when available
+- `lang=auto` (default): detects Cyrillic and switches to `ru`
+- Presets: `ru_warm`, `ru_neutral`, `ru_bright`, `en_neutral`
+- Voice discovery via MCP tool: `list_voices`
+- Optional live playback to default output device: `play_audio=true`
+- Optional edge streaming playback: `stream_playback=true` (with `provider=edge`)
+
+Example:
+
+```bash
+python mcp_client.py --text "Привет! Очень рада тебя слышать." --preset ru_warm
+```
+
+Explicit provider selection:
+
+```bash
+python mcp_client.py --text "Привет!" --provider edge --language ru --voice ru-RU-SvetlanaNeural
+```
+
+Live playback (default system headphones/speakers):
+
+```bash
+python mcp_client.py --text "Привет, это тест живого диалога." --provider edge --preset ru_warm --play-audio --stream-playback
 ```
 
 ### Disabling S3 Upload
