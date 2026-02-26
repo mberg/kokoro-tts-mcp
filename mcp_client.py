@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-async def send_tts_request(host, port, text, provider, voice, speed, language, filename, play_audio=False, stream_playback=False, upload_to_s3=True):
+async def send_tts_request(host, port, text, provider, voice, speed, language, preset, filename, play_audio=False, stream_playback=False, upload_to_s3=True):
     """Send a TTS request to the MCP server"""
     try:
         # Connect to the server
@@ -24,6 +24,7 @@ async def send_tts_request(host, port, text, provider, voice, speed, language, f
             "voice": voice,
             "speed": speed,
             "lang": language,
+            "preset": preset,
             "play_audio": play_audio,
             "stream_playback": stream_playback,
             "upload_to_s3": upload_to_s3
@@ -117,8 +118,10 @@ def main():
                        help="TTS provider: auto, edge, kokoro")
     parser.add_argument("--speed", type=float, default=float(os.environ.get("TTS_SPEED", "1.0")),
                        help="Speech speed (default: 1.0 or TTS_SPEED env var)")
-    parser.add_argument("--language", default=os.environ.get("TTS_LANGUAGE", "en-us"),
-                       help="Language code (default: en-us or TTS_LANGUAGE env var)")
+    parser.add_argument("--language", default=os.environ.get("TTS_LANGUAGE", "auto"),
+                       help="Language code (default: auto or TTS_LANGUAGE env var)")
+    parser.add_argument("--preset", default=None,
+                       help="Optional preset (ru_warm, ru_neutral, ru_bright, en_neutral)")
     parser.add_argument("--filename", default=None,
                        help="Output filename (default: auto-generated)")
     parser.add_argument("--play-audio", action="store_true",
@@ -155,6 +158,7 @@ def main():
         voice=args.voice,
         speed=args.speed,
         language=args.language,
+        preset=args.preset,
         filename=args.filename,
         play_audio=args.play_audio,
         stream_playback=args.stream_playback,
