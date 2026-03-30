@@ -138,3 +138,8 @@ The TTS server generates MP3 files that are stored locally and optionally upload
 - Enable/disable S3 uploads with `S3_ENABLED=true` or `DISABLE_S3=true`
 - Configure AWS credentials and bucket settings in the `.env` file
 - S3 uploads can be disabled per-request using the client's `--no-s3` option
+
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/mberg-kokoro-tts-mcp).
+
